@@ -12,6 +12,7 @@ The implementation might be a bit funky, but I promise it works. I've used this 
 
 Directions:
 The following is what I wrote in the source code:
+
 '''Directions:
     CRect(x, y) is the constructor for rectangular form
     CPolar(r, θ, rad = False) is the constructor for polar form
@@ -19,11 +20,11 @@ The following is what I wrote in the source code:
         and uses radians in internal calculations. To convert between
         degrees and radians, do num.swap() and no need to reassign.
         
-    To swap between rect and polar, do:
+   To swap between rect and polar, do:
         num = num.to_rect() and
         num = num.to_polar()
         
-    Most common math operations will work, and rectangular form or polar
+   Most common math operations will work, and rectangular form or polar
     form does not matter.
         Add, subtract, divide, multiply, exponent (with each other or
         with ints/floats), along with == and !=
