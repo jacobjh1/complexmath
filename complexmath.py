@@ -196,7 +196,20 @@ class CRect(Complex):
     def __repr__ (self):
         return str(self)
         #return f'CRect({self._a}, {self._b})'
-    
+
+    '''
+    same as __str__() except the precision (rounding) of the real and 
+        imaginary parts can be specified:
+    prec_real = number of decimal places to round the real part to
+    prec_imag = optional number of decimal places to round the imaginary part to
+        if None, then prec_imag = prec_real
+    '''
+    def str_round (self, prec_real, prec_imag = None):
+        if prec_imag is None:
+            prec_imag = prec_real
+            
+        return f"{self._a:.{prec_real}f}{'-j' if self._b < 0 else '+j'}" +\
+               f"{abs(self._b):.{prec_imag}f}"
 
 class CPolar(Complex):
     ''' pass only polar form (default degrees)'''
@@ -215,6 +228,21 @@ class CPolar(Complex):
         return str(self)
         #in_rad = ', rad = False' if not self._in_radians else ''
         #return f'CPolar({self._r}, {self._phase}{in_rad})'
+
+    '''
+    same as __str__() except the precision (rounding) of the magnitude and 
+        phase parts can be specified:
+    prec_mag = number of decimal places to round the magnitude part to
+    prec_phase = optional number of decimal places to round the phase part to
+        if None, thne prec_phase = prec_mag
+    '''
+    def str_round (self, prec_mag, prec_phase = None):
+        if prec_phase is None:
+            prec_phase = prec_mag
+        phase = self._phase if self._in_radians else self._phase*180/pi
+    
+        return f"{self._r:.{prec_mag}f}∠{phase:.{prec_phase}f}" +\
+               ('' if self._in_radians else 'º')
 
     def get_units (self):
         return 'radians' if self._in_radians else 'degrees'
@@ -243,4 +271,12 @@ if __name__ == '__main__':
     zT = CRect(8, -12) + ((zc * z6) / (zc + z6))
     
     assert zT==CRect(34.688358640636295, -6.930103639431186), 'something broke'
-    
+
+    rounding1 = CRect(3.1415, -6.2830)
+    rounding2 = CPolar(2.718, pi/2, rad = True)
+    assert rounding1.str_round(2) == '3.14-j6.28'
+    assert rounding1.str_round(1, 2) == '3.1-j6.28'
+    assert rounding1.str_round(6) == '3.141500-j6.283000'
+    assert rounding2.str_round(2) == '2.72∠1.57'
+    assert rounding2.str_round(1, 3) == '2.7∠1.571'
+    assert rounding2.str_round(4) == '2.7180∠1.5708'
